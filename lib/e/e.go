@@ -2,7 +2,7 @@ package e
 
 import "fmt"
 
-func wrap(msg string, err error) error {
+func Wrap(msg string, err error) error {
 	return fmt.Errorf("%s: %w", msg, err)
 }
 
