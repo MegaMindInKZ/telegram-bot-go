@@ -10,5 +10,5 @@ func WrapIfErr(msg string, err error) error {
 	if err == nil {
 		return nil
 	}
-	return wrap(msg, err)
+	return Wrap(msg, err)
 }

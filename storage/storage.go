@@ -4,10 +4,10 @@ import "context"
 
 type Storage interface {
 	UpdateOrInsertUser(ctx context.Context, user User) error
-	From(ctx context.Context, username string) (Project, error)
-	ListProjects(ctx context.Context) []Project
-	ListQuestion(ctx context.Context, project Project) []Question
-	Answer(ctx context.Context, question Question) string
+	Project(ctx context.Context, user User) (Project, error)
+	ListProjects(ctx context.Context) ([]Project, error)
+	ListQuestion(ctx context.Context, project Project) ([]Question, error)
+	Question(ctx context.Context, user User, order int) (Question, error)
 	IsManagerBusy(ctx context.Context, manager Manager) (bool, err error)
 	SetManagerAndUserBusy(ctx context.Context, manager Manager, user User) error
 	UnsetManagerAndUserBusy(ctx context.Context, manager Manager, user User) error
@@ -20,20 +20,20 @@ type Manager struct {
 }
 
 type User struct {
-	Username string
-	Project  Project
-	OnChat   bool
+	Username  string
+	ProjectID int
+	OnChat    bool
 }
 
 type Question struct {
-	Order    int
-	Question string
-	Answer   string
-	Project  Project
+	Order     int
+	Question  string
+	Answer    string
+	ProjectID int
 }
 
 type Project struct {
-	ID      int
-	Name    string
-	Manager Manager
+	ID        int
+	Name      string
+	ManagerID int
 }
