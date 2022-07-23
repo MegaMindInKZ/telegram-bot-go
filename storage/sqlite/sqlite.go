@@ -9,7 +9,11 @@ import (
 
 const dbPath = "./telegram-bot.db"
 
-func DB() *sql.DB {
+type Storage struct {
+	database *sql.DB
+}
+
+func New() *sql.DB {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal(err)
