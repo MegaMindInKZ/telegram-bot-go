@@ -3,30 +3,37 @@ package storage
 import "context"
 
 type Storage interface {
-	UpdateOrInsert(ctx context.Context, username string) error
-	From(ctx context.Context, username string) (Project, error)
-	ListProjects(ctx context.Context) []Project
-	ListQuestion(ctx context.Context, project Project) []Question
-	Answer(ctx context.Context, question Question) string
+	UpdateOrInsertUser(ctx context.Context, user User) error
+	Project(ctx context.Context, user User) (Project, error)
+	ListProjects(ctx context.Context) ([]Project, error)
+	ListQuestion(ctx context.Context, project Project) ([]Question, error)
+	Question(ctx context.Context, user User, order int) (Question, error)
+	Manager(ctx context.Context, managerID int) (Manager, err error)
+	SetManagerAndUserBusy(ctx context.Context, managerID int, userID int) error
+	UnsetManagerAndUserBusy(ctx context.Context, manager Manager, user User) error
 }
 
 type Manager struct {
-	username string
+	ID       int
+	Username string
+	IsBusy   bool
 }
 
 type User struct {
-	username string
-	project  Project
+	Username  string
+	ProjectID int
+	OnChat    bool
 }
 
 type Question struct {
-	order    int
-	question string
-	answer   string
-	project  Project
+	Order     int
+	Question  string
+	Answer    string
+	ProjectID int
 }
 
 type Project struct {
-	name    string
-	manager Manager
+	ID        int
+	Name      string
+	ManagerID int
 }
