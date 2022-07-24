@@ -75,3 +75,44 @@ func (s Storage) Question(_ context.Context, user storage.User, order int) (stor
 	}
 	return question, nil
 }
+
+func (s Storage) Manager(_ context.Context, managerID int) (storage.Manager, error) {
+	var manager storage.Manager
+	err := s.database.QueryRow("SELECT ID, USERNAME, ISBUSY FROM MANAGER WHERE ID = ?", managerID).Scan(&manager.ID, manager.Username, manager.IsBusy)
+	if err != nil {
+		return storage.Manager{}, err
+	}
+	return manager, nil
+}
+
+func (s Storage) SetManagerAndUserBusy(_ context.Context, managerID int, userID int) error {
+	query1, err := s.database.Prepare("UPDATE MANAGER SET ISBUSY = TRUE WHERE ID = ?")
+	if err != nil {
+		return err
+	}
+	defer query1.Close()
+	query1.Exec(managerID)
+	query2, err := s.database.Prepare("UPDATE USER SET ONCHAT = TRUE WHERE ID = ?")
+	if err != nil {
+		return err
+	}
+	query2.Exec(userID)
+	defer query2.Close()
+	return nil
+}
+
+func (s Storage) UnsetManagerAndUserBusy(_ context.Context, managerID int, userID int) error {
+	query1, err := s.database.Prepare("UPDATE MANAGER SET ISBUSY = FALSE WHERE ID = ?")
+	if err != nil {
+		return err
+	}
+	defer query1.Close()
+	query1.Exec(managerID)
+	query2, err := s.database.Prepare("UPDATE USER SET ONCHAT = FALSE WHERE ID = ?")
+	if err != nil {
+		return err
+	}
+	query2.Exec(userID)
+	defer query2.Close()
+	return nil
+}

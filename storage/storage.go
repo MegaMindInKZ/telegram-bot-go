@@ -8,8 +8,8 @@ type Storage interface {
 	ListProjects(ctx context.Context) ([]Project, error)
 	ListQuestion(ctx context.Context, project Project) ([]Question, error)
 	Question(ctx context.Context, user User, order int) (Question, error)
-	IsManagerBusy(ctx context.Context, manager Manager) (bool, err error)
-	SetManagerAndUserBusy(ctx context.Context, manager Manager, user User) error
+	Manager(ctx context.Context, managerID int) (Manager, err error)
+	SetManagerAndUserBusy(ctx context.Context, managerID int, userID int) error
 	UnsetManagerAndUserBusy(ctx context.Context, manager Manager, user User) error
 }
 
