@@ -16,12 +16,14 @@ type Storage struct {
 	database *sql.DB
 }
 
-func New() *sql.DB {
+func New() Storage {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db
+	return Storage{
+		database: db,
+	}
 }
 
 func (s Storage) Project(_ context.Context, projectID int) (storage.Project, error) {

@@ -48,12 +48,12 @@ func (s Storage) updateUser(user storage.User) error {
 	}
 	query.Exec(user.OnChat, user.Username)
 	defer query.Close()
-	if user.Project != (storage.Project{}) {
-		query, err := s.database.Prepare("UPDATE USER SET Project = ? WHERE USERNAME = ?")
+	if user.ProjectID != 0 {
+		query, err := s.database.Prepare("UPDATE USER SET ProjectID = ? WHERE USERNAME = ?")
 		if err != nil {
 			return e.Wrap("something went wrong", err)
 		}
-		query.Exec(user.Project.ID)
+		query.Exec(user.ProjectID, user.Username)
 		defer query.Close()
 	}
 	return nil

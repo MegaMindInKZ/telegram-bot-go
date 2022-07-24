@@ -52,6 +52,21 @@ func (c *Client) Updates(ctx context.Context, offset int, limit int) (updates []
 	}
 	return res.Result, nil
 }
+
+func (c *Client) SendMessage(ctx context.Context, chatID int, text string) error {
+	q := url.Values{}
+	q.Add("chat_id", strconv.Itoa(chatID))
+	q.Add("text", text)
+
+	_, err := c.doRequest(ctx, sendMessageMethod, q)
+
+	if err != nil {
+		return e.Wrap("can't send message", err)
+	}
+
+	return nil
+}
+
 func (c *Client) doRequest(ctx context.Context, method string, query url.Values) (data []byte, err error) {
 	defer func() {
 		err = e.WrapIfErr("can't do request", err)
