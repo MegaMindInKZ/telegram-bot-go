@@ -3,29 +3,43 @@ package storage
 import "context"
 
 type Storage interface {
-	UpdateOrInsertUser(ctx context.Context, user User) error
-	Project(ctx context.Context, projectID int) (Project, error)
-	ListProjects(ctx context.Context) ([]Project, error)
-	ListQuestion(ctx context.Context, project Project) ([]Question, error)
-	Question(ctx context.Context, user User, order int) (Question, error)
-	Manager(ctx context.Context, managerID int) (Manager, error)
-	SetManagerAndUserBusy(ctx context.Context, managerID int, userID int) error
-	UnsetManagerAndUserBusy(ctx context.Context, managerID int, userID int) error
+	UserByID(ctx context.Context, userID int) User            //done
+	UserByUsername(ctx context.Context, username string) User //done
+	ProjectByID(ctx context.Context, projectID int) (Project, error)
+	ManagerByID(ctx context.Context, managerID int) (Manager, error)                             //done
+	ManagerByUsername(ctx context.Context, username string) (Manager, error)                     //done
+	SetIsBusyForManager(ctx context.Context, manager Manager, user User) error                   //done
+	UnsetIsBusyForManager(ctx context.Context, manager Manager) error                            //done
+	QuestionByProjectIDAndOrder(ctx context.Context, projectID int, order int) (Question, error) //done
+	SetProjectForUser(ctx context.Context, user User, project Project) error                     //done
+	UnsetProjectForUser(ctx context.Context, user User) error                                    //done
+	SetOnChatForUser(ctx context.Context, user User) error                                       //done
+	UnsetOnChatForUser(ctx context.Context, user User) error                                     //done
+	ListQuestions(_ context.Context, projectID int) ([]Question, error)
+	ListProjects(ctx context.Context) ([]storage.Project, error) //done
+
 }
 
 type Manager struct {
-	ID       int
-	Username string
-	IsBusy   bool
+	ID              int
+	Username        string
+	IsBusy          bool
+	CurrentClientID int
+	FirstName       string
+	LastName        string
 }
 
 type User struct {
+	ID        int
 	Username  string
 	ProjectID int
 	OnChat    bool
+	FirstName string
+	LastName  string
 }
 
 type Question struct {
+	ID        int
 	Order     int
 	Question  string
 	Answer    string
