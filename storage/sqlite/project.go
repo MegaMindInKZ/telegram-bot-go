@@ -6,9 +6,9 @@ import (
 	"telegram-bot/storage"
 )
 
-func (s Storage) Project(_ context.Context, projectID int) (storage.Project, error) {
+func (s Storage) ProjectByID(_ context.Context, projectID int) (storage.Project, error) {
 	var project storage.Project
-	err := s.database.QueryRow("SELECT ID, NAME, MANAGER WHERE ID = ?", projectID).Scan(&project.ID, &project.Name, &project.ManagerID)
+	err := s.Database.QueryRow("SELECT ID, NAME, MANAGER WHERE ID = ?", projectID).Scan(&project.ID, &project.Name, &project.ManagerID)
 	if err != nil {
 		return storage.Project{}, err
 	}
@@ -17,7 +17,7 @@ func (s Storage) Project(_ context.Context, projectID int) (storage.Project, err
 
 func (s Storage) ListProjects(ctx context.Context) ([]storage.Project, error) {
 	var projects []storage.Project
-	rows, err := s.database.Query("SELECT ID, NAME, MANAGERID FROM PROJECT")
+	rows, err := s.Database.Query("SELECT ID, NAME, MANAGERID FROM PROJECT")
 	if err != nil {
 		return projects, err
 	}

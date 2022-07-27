@@ -24,7 +24,7 @@ func (s Storage) UpdateOrInsertUser(_ context.Context, user storage.User) error 
 func (s Storage) isExistUser(user storage.User) (bool, error) {
 	var exists bool
 	query := fmt.Sprint("SELECT EXISTS (SELECT * FROM USER WHERE USERNAME = ?)")
-	err := s.database.QueryRow(query, user.Username).Scan(&exists)
+	err := s.Database.QueryRow(query, user.Username).Scan(&exists)
 	if err != nil && err != sql.ErrNoRows {
 		return false, err
 	}
@@ -32,7 +32,7 @@ func (s Storage) isExistUser(user storage.User) (bool, error) {
 }
 
 func (s Storage) insertUser(user storage.User) error {
-	query, err := s.database.Prepare("INSERT INTO USER(USERNAME) VALUES (?)")
+	query, err := s.Database.Prepare("INSERT INTO USER(USERNAME) VALUES (?)")
 	if err != nil {
 		return e.Wrap("something went wrong", err)
 	}
@@ -42,14 +42,14 @@ func (s Storage) insertUser(user storage.User) error {
 }
 
 func (s Storage) updateUser(user storage.User) error {
-	query, err := s.database.Prepare("UPDATE USER SET OnChat = ? WHERE USERNAME = ?")
+	query, err := s.Database.Prepare("UPDATE USER SET OnChat = ? WHERE USERNAME = ?")
 	if err != nil {
 		return e.Wrap("something went wrong", err)
 	}
 	query.Exec(user.OnChat, user.Username)
 	defer query.Close()
 	if user.ProjectID != 0 {
-		query, err := s.database.Prepare("UPDATE USER SET ProjectID = ? WHERE USERNAME = ?")
+		query, err := s.Database.Prepare("UPDATE USER SET ProjectID = ? WHERE USERNAME = ?")
 		if err != nil {
 			return e.Wrap("something went wrong", err)
 		}

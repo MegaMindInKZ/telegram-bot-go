@@ -7,7 +7,7 @@ import (
 
 func (s Storage) QuestionByProjectIDAndOrder(_ context.Context, projectID int, order int) (storage.Question, error) {
 	var question storage.Question
-	err := s.database.QueryRow("SELECT ID, ORDER, QUESTION, ANSWER, PROJECTID WHERE ORDER = ? AND PROJECTID = ?", order, projectID).Scan(&question.ID, &question.Order, &question.Question, &question.Answer, &question.ProjectID)
+	err := s.Database.QueryRow("SELECT ID, ORDER, QUESTION, ANSWER, PROJECTID WHERE ORDER = ? AND PROJECTID = ?", order, projectID).Scan(&question.ID, &question.Order, &question.Question, &question.Answer, &question.ProjectID)
 	if err != nil {
 		return storage.Question{}, err
 	}
@@ -16,7 +16,7 @@ func (s Storage) QuestionByProjectIDAndOrder(_ context.Context, projectID int, o
 
 func (s Storage) ListQuestions(_ context.Context, projectID int) ([]storage.Question, error) {
 	var questions []storage.Question
-	rows, err := s.database.Query("SELECT id, order, question, answer, projectid where projectID = ?", projectID)
+	rows, err := s.Database.Query("SELECT id, order, question, answer, projectid where projectID = ?", projectID)
 	if err != nil {
 		return questions, err
 	}

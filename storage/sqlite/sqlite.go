@@ -7,10 +7,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const dbPath = "./telegram-bot.db"
+const dbPath = "telegram-bot.db"
 
 type Storage struct {
-	database *sql.DB
+	Database *sql.DB
 }
 
 func New() Storage {
@@ -19,6 +19,6 @@ func New() Storage {
 		log.Fatal(err)
 	}
 	return Storage{
-		database: db,
+		Database: db,
 	}
 }

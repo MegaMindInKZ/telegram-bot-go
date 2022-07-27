@@ -4,9 +4,10 @@ import (
 	"log"
 	"telegram-bot/clients/tgClient"
 	"telegram-bot/config"
+	"telegram-bot/storage/sqlite"
+
 	event_consumer "telegram-bot/consumer/event-consumer"
 	"telegram-bot/events/telegram"
-	"telegram-bot/storage/sqlite"
 )
 
 const (
@@ -31,5 +32,6 @@ func main() {
 	if err := consumer.Start(); err != nil {
 		log.Fatal("service is stopped", err)
 	}
+	defer storage.Database.Close()
 	// db := mongo.New(cfg.MongoConnectionString)
 }

@@ -15,14 +15,15 @@ type Storage interface {
 	UnsetProjectForUser(ctx context.Context, user User) error                                    //done
 	SetOnChatForUser(ctx context.Context, user User) error                                       //done
 	UnsetOnChatForUser(ctx context.Context, user User) error                                     //done
-	ListQuestions(_ context.Context, projectID int) ([]Question, error)
-	ListProjects(ctx context.Context) ([]storage.Project, error) //done
+	ListQuestions(ctx context.Context, projectID int) ([]Question, error)
+	ListProjects(ctx context.Context) ([]Project, error) //done
 
 }
 
 type Manager struct {
 	ID              int
 	Username        string
+	ChatID          int
 	IsBusy          bool
 	CurrentClientID int
 	FirstName       string

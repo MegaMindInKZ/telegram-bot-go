@@ -9,10 +9,11 @@ import (
 )
 
 const (
-	ProjectCmd  = "/project"
-	HelpCmd     = "/help"
-	QuestionCmd = "/question"
-	StartCmd    = "/start"
+	ProjectCmd   = "/project"
+	HelpCmd      = "/help"
+	QuestionCmd  = "/question"
+	StartCmd     = "/start"
+	ListProjects = "/projects"
 )
 
 func (p *Processor) doCmd(ctx context.Context, text string, chatID int, username string) error {
@@ -29,12 +30,28 @@ func (p *Processor) doCmd(ctx context.Context, text string, chatID int, username
 		return p.SendHelp(ctx, chatID, username)
 	case StartCmd:
 		return p.SendHello(ctx, chatID, username)
+	case ListProjects:
+		return p.SendProjects(ctx, chatID, username)
+	default:
+		return p.SendUnknownCommand(ctx, chatID, username)
 	}
-	return nil
 }
 
 func (p *Processor) ProjectUpdate(ctx context.Context, chatID int, username string) (err error) {
 	return nil
+}
+
+func (p *Processor) SendProjects(ctx context.Context, chatID int, username string) error {
+	listProjects, err := p.storage.ListProjects(ctx)
+	if err != nil {
+		return p.tg.SendMessage(ctx, chatID, err.Error())
+	}
+	msg := ""
+	for _, project := range listProjects {
+		msg = msg + fmt.Sprintf("%d) %s", project.ID, project.Name)
+	}
+	return p.tg.SendMessage(ctx, chatID, msg)
+
 }
 
 func (p *Processor) SendHelp(ctx context.Context, chatID int, username string) error {
@@ -43,6 +60,10 @@ func (p *Processor) SendHelp(ctx context.Context, chatID int, username string) e
 
 func (p *Processor) SendHello(ctx context.Context, chatID int, username string) (err error) {
 	return p.tg.SendMessage(ctx, chatID, msgHello)
+}
+
+func (p *Processor) SendUnknownCommand(ctx context.Context, chatID int, username string) (err error) {
+	return p.tg.SendMessage(ctx, chatID, msgUnknownCommand)
 }
 
 // func (p *Processor) WorkWithNumber(ctx context.Context, chatID, number int, username string) (err error) {
