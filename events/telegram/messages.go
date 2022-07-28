@@ -5,4 +5,5 @@ const msgHelp = "You can find the answers of some questions. First choose which 
 const (
 	msgHello          = "Hi there! \n\n"
 	msgUnknownCommand = "Unknown command!!!"
+	msgSuccess        = "Command compiled successfully!!!"
 )

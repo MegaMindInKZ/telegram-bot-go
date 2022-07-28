@@ -8,7 +8,7 @@ import (
 
 func (s Storage) ProjectByID(_ context.Context, projectID int) (storage.Project, error) {
 	var project storage.Project
-	err := s.Database.QueryRow("SELECT ID, NAME, MANAGER WHERE ID = ?", projectID).Scan(&project.ID, &project.Name, &project.ManagerID)
+	err := s.Database.QueryRow("SELECT ID, NAME, MANAGERID FROM PROJECT WHERE ID = ?", projectID).Scan(&project.ID, &project.Name, &project.ManagerID)
 	if err != nil {
 		return storage.Project{}, err
 	}

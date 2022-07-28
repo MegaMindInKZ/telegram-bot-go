@@ -19,7 +19,6 @@ func main() {
 	configuration := config.MustLoad()
 
 	storage := sqlite.New()
-
 	eventsProcessor := telegram.New(
 		tgClient.New(configuration.TgBotHost, configuration.TgBotToken),
 		storage,
