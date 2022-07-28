@@ -3,12 +3,12 @@ package storage
 import "context"
 
 type Storage interface {
-	UserByID(ctx context.Context, userID int) User            //done
-	UserByUsername(ctx context.Context, username string) User //done
-	InsertUser(ctx context.Context, username string) error    //done
+	UserByID(ctx context.Context, userID int) User                     //done
+	UserByUsername(ctx context.Context, username string) User          //done
+	InsertUser(ctx context.Context, username string, chatID int) error //done
 	ProjectByID(ctx context.Context, projectID int) (Project, error)
-	ManagerByID(ctx context.Context, managerID int) (Manager, error)                             //done
-	ManagerByUsername(ctx context.Context, username string) (Manager, error)                     //done
+	ManagerByID(ctx context.Context, managerID int) Manager                                      //done
+	ManagerByUsername(ctx context.Context, username string) Manager                              //done
 	SetIsBusyForManager(ctx context.Context, manager Manager, user User) error                   //done
 	UnsetIsBusyForManager(ctx context.Context, manager Manager) error                            //done
 	IsManager(ctx context.Context, username string) bool                                         //done
@@ -36,6 +36,7 @@ type User struct {
 	ID        int
 	Username  string
 	ProjectID int
+	ChatID    int
 	OnChat    bool
 	FirstName string
 	LastName  string

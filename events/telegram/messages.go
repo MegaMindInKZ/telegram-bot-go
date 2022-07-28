@@ -7,3 +7,7 @@ const (
 	msgUnknownCommand = "Unknown command!!!"
 	msgSuccess        = "Command compiled successfully!!!"
 )
+
+// const (
+// 	msgManagerGreeting = "Hello, my name is %s %s!!! I will reply as I will available!!!"
+// )

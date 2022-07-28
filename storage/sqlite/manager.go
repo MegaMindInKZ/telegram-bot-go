@@ -6,22 +6,22 @@ import (
 	"telegram-bot/storage"
 )
 
-func (s Storage) ManagerByID(_ context.Context, managerID int) (storage.Manager, error) {
+func (s Storage) ManagerByID(_ context.Context, managerID int) storage.Manager {
 	var manager storage.Manager
 	err := s.Database.QueryRow("SELECT ID, USERNAME, CHATID, ISBUSY, CURRENTCLIENTID, FIRSTNAME, LASTNAME FROM MANAGER WHERE ID = ?", managerID).Scan(&manager.ID, &manager.Username, &manager.ChatID, &manager.IsBusy, &manager.CurrentClientID, &manager.FirstName, &manager.LastName)
 	if err != nil {
-		return manager, e.Wrap("Manager with this id doesn't exist", err)
+		return manager
 	}
-	return manager, nil
+	return manager
 }
 
-func (s Storage) ManagerByUsername(_ context.Context, username string) (storage.Manager, error) {
+func (s Storage) ManagerByUsername(_ context.Context, username string) storage.Manager {
 	var manager storage.Manager
 	err := s.Database.QueryRow("SELECT ID, USERNAME, CHATID, ISBUSY, CURRENTCLIENTID, FIRSTNAME, LASTNAME FROM MANAGER WHERE  = ?", username).Scan(&manager.ID, &manager.Username, &manager.ChatID, &manager.IsBusy, &manager.CurrentClientID, &manager.FirstName, &manager.LastName)
 	if err != nil {
-		return manager, e.Wrap("Manager with this id doesn't exist", err)
+		return manager
 	}
-	return manager, nil
+	return manager
 }
 
 func (s Storage) SetIsBusyForManager(ctx context.Context, manager storage.Manager, user storage.User) error {

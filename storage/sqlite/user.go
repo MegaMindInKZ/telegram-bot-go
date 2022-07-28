@@ -9,13 +9,13 @@ import (
 
 func (s Storage) UserByID(_ context.Context, userID int) storage.User {
 	var user storage.User
-	s.Database.QueryRow("SELECT ID, USERNAME, PROJECTID, ONCHAT, FIRSTNAME, LASTNAME FROM USER WHERE ID = ?", userID).Scan(&user.ID, &user.Username, &user.ProjectID, &user.OnChat, &user.FirstName, &user.LastName)
+	s.Database.QueryRow("SELECT ID, USERNAME, PROJECTID, CHATID, ONCHAT, FIRSTNAME, LASTNAME FROM USER WHERE ID = ?", userID).Scan(&user.ID, &user.Username, &user.ProjectID, &user.ChatID, &user.OnChat, &user.FirstName, &user.LastName)
 	return user
 }
 
 func (s Storage) UserByUsername(_ context.Context, username string) storage.User {
 	var user storage.User
-	s.Database.QueryRow("SELECT ID, USERNAME, PROJECTID, ONCHAT, FIRSTNAME, LASTNAME FROM USER WHERE USERNAME = ?", username).Scan(&user.ID, &user.Username, &user.ProjectID, &user.OnChat, &user.FirstName, &user.LastName)
+	s.Database.QueryRow("SELECT ID, USERNAME, PROJECTID, CHATID, ONCHAT, FIRSTNAME, LASTNAME FROM USER WHERE USERNAME = ?", username).Scan(&user.ID, &user.Username, &user.ProjectID, &user.ChatID, &user.OnChat, &user.FirstName, &user.LastName)
 	return user
 }
 
@@ -47,16 +47,16 @@ func (s Storage) UnsetOnChatForUser(_ context.Context, user storage.User) error 
 	return e.WrapIfErr("error: cannot update user", err)
 }
 
-func (s Storage) InsertUser(_ context.Context, username string) error {
+func (s Storage) InsertUser(_ context.Context, username string, chatID int) error {
 	exist, err := s.isExistUser(username)
 	if err != nil || exist {
 		return err
 	}
-	query, err := s.Database.Prepare("INSERT INTO USER(USERNAME) VALUES (?)")
+	query, err := s.Database.Prepare("INSERT INTO USER(USERNAME, CHATID) VALUES (?, ?)")
 	if err != nil {
 		return e.Wrap("something went wrong", err)
 	}
-	query.Exec(username)
+	query.Exec(username, chatID)
 	defer query.Close()
 	return nil
 }
