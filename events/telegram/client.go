@@ -52,10 +52,27 @@ func (p *Processor) sendMessageToManager(ctx context.Context, chatID int, text s
 
 func (p *Processor) workWithNumbers(ctx context.Context, chatID int, number int, username string) error {
 	user := p.storage.UserByUsername(ctx, username)
+	if number == -1 {
+		return p.connectClientWithManager(ctx, chatID, username)
+	}
 	if user.ProjectID == 0 {
 		return p.setProjectForUser(ctx, chatID, user, number)
 	}
 	return p.sendQuestionWithAnswer(ctx, chatID, number, username)
+}
+
+func (p *Processor) connectClientWithManager(ctx context.Context, chatID int, username string) error {
+	user := p.storage.UserByUsername(ctx, username)
+	project, _ := p.storage.ProjectByID(ctx, user.ProjectID)
+	manager := p.storage.ManagerByID(ctx, project.ManagerID)
+	if manager.IsBusy {
+		return p.tg.SendMessage(ctx, chatID, msgBusy)
+	}
+	p.storage.SetIsBusyForManager(ctx, manager, user)
+	p.storage.SetOnChatForUser(ctx, user)
+	fmt.Print(manager.ID, username)
+	p.tg.SendMessage(ctx, chatID, msgWait)
+	return p.tg.SendMessage(ctx, manager.ChatID, fmt.Sprintf(msgManagerGreeting, user.Username, project.Name))
 }
 
 func (p *Processor) sendQuestionWithAnswer(ctx context.Context, chatID, number int, username string) error {
@@ -101,6 +118,7 @@ func (p *Processor) SendQuestions(ctx context.Context, chatID int, username stri
 	for _, quesiton := range questions {
 		msg = msg + fmt.Sprintf("%d) %s\n", quesiton.Order, quesiton.Question)
 	}
+	msg = msg + "-1) If you want to contact with manager"
 	return p.tg.SendMessage(ctx, chatID, msg)
 }
 

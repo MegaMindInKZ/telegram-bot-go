@@ -17,7 +17,7 @@ func (s Storage) ManagerByID(_ context.Context, managerID int) storage.Manager {
 
 func (s Storage) ManagerByUsername(_ context.Context, username string) storage.Manager {
 	var manager storage.Manager
-	err := s.Database.QueryRow("SELECT ID, USERNAME, CHATID, ISBUSY, CURRENTCLIENTID, FIRSTNAME, LASTNAME FROM MANAGER WHERE  = ?", username).Scan(&manager.ID, &manager.Username, &manager.ChatID, &manager.IsBusy, &manager.CurrentClientID, &manager.FirstName, &manager.LastName)
+	err := s.Database.QueryRow("SELECT ID, USERNAME, CHATID, ISBUSY, CURRENTCLIENTID FROM MANAGER WHERE USERNAME = ?", username).Scan(&manager.ID, &manager.Username, &manager.ChatID, &manager.IsBusy, &manager.CurrentClientID)
 	if err != nil {
 		return manager
 	}

@@ -33,5 +33,6 @@ func (p *Processor) EndChatForManager(ctx context.Context, chatID int, manager s
 
 func (p *Processor) SendMessageToClient(ctx context.Context, text string, chatID int, manager storage.Manager) error {
 	client := p.storage.UserByID(ctx, manager.CurrentClientID)
+	text = "From manager \n" + text
 	return p.tg.SendMessage(ctx, client.ChatID, text)
 }
